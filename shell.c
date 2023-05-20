@@ -192,6 +192,19 @@ void execute(char **tokens, int num_tokens)
                 close(output_fd);               
             }
 
+            if(strcmp(tokens[i],">") == 0)
+            {
+                char *newtoken[i];
+                for (size_t j = 0; j < i; j++)
+                {
+                    newtoken[j] = tokens[j];
+                }
+                execvp(newtoken[0], newtoken);
+                perror("error de comando");
+                exit(EXIT_FAILURE); 
+
+            }
+            
             execvp(tokens[0], tokens);
             perror("error de comando");
             exit(EXIT_FAILURE);
