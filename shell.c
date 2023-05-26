@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include "shell.h"
 
+
 void DirList()
 {
     DIR *dir;
@@ -68,7 +69,6 @@ void execute(char **tokens, int num_tokens)
                 // Redireccionar la salida estándar a la consola
                 freopen("/dev/tty", "w", stdout);
             }
-
         }
         else if (strcmp(tokens[i], ">>") == 0)
         {
@@ -97,7 +97,6 @@ void execute(char **tokens, int num_tokens)
                 // Redireccionar la salida estándar a la consola
                 freopen("/dev/tty", "w", stdout);
             }
-
         }
         else if (strcmp(tokens[i], "<") == 0)
         {
@@ -119,7 +118,7 @@ void execute(char **tokens, int num_tokens)
 
     if (pipe_index != -1)
     {
-        
+
         int pipefd[2];
         if (pipe(pipefd) == -1)
         {
@@ -127,7 +126,6 @@ void execute(char **tokens, int num_tokens)
             exit(EXIT_FAILURE);
         }
 
-        
         pid_t pid1 = fork();
         if (pid1 == -1)
         {
@@ -136,16 +134,16 @@ void execute(char **tokens, int num_tokens)
         }
         else if (pid1 == 0)
         {
-            close(pipefd[0]);               
-            dup2(pipefd[1], STDOUT_FILENO); 
-            close(pipefd[1]);    
+            close(pipefd[0]);
+            dup2(pipefd[1], STDOUT_FILENO);
+            close(pipefd[1]);
 
             if (input_fd != STDIN_FILENO)
             {
-                dup2(input_fd, STDIN_FILENO); 
-                close(input_fd);   
-                tokens[redicIn] = NULL;           
-            }          
+                dup2(input_fd, STDIN_FILENO);
+                close(input_fd);
+                tokens[redicIn] = NULL;
+            }
 
             tokens[pipe_index] = NULL;
             execvp(tokens[0], tokens);
@@ -161,26 +159,26 @@ void execute(char **tokens, int num_tokens)
         }
         else if (pid2 == 0)
         {
-            close(pipefd[1]);              
-            dup2(pipefd[0], STDIN_FILENO); 
-            close(pipefd[0]); 
+            close(pipefd[1]);
+            dup2(pipefd[0], STDIN_FILENO);
+            close(pipefd[0]);
 
             if (output_fd != STDOUT_FILENO)
             {
-                dup2(output_fd, STDOUT_FILENO); 
-                close(output_fd);      
-                tokens[redicOut] = NULL;         
-            }             
+                dup2(output_fd, STDOUT_FILENO);
+                close(output_fd);
+                tokens[redicOut] = NULL;
+            }
 
             execvp(tokens[pipe_index + 1], &tokens[pipe_index + 1]);
             perror("error de comando");
             exit(EXIT_FAILURE);
         }
 
-        close(pipefd[0]);       
-        close(pipefd[1]);       
-        waitpid(pid1, NULL, 0); 
-        waitpid(pid2, NULL, 0); 
+        close(pipefd[0]);
+        close(pipefd[1]);
+        waitpid(pid1, NULL, 0);
+        waitpid(pid2, NULL, 0);
     }
     else
     {
@@ -196,15 +194,15 @@ void execute(char **tokens, int num_tokens)
             // Child process
             if (input_fd != STDIN_FILENO)
             {
-                dup2(input_fd, STDIN_FILENO); 
-                close(input_fd);   
-                tokens[redicIn] = NULL;           
+                dup2(input_fd, STDIN_FILENO);
+                close(input_fd);
+                tokens[redicIn] = NULL;
             }
             if (output_fd != STDOUT_FILENO)
             {
-                dup2(output_fd, STDOUT_FILENO); 
-                close(output_fd);      
-                tokens[redicOut] = NULL;         
+                dup2(output_fd, STDOUT_FILENO);
+                close(output_fd);
+                tokens[redicOut] = NULL;
             }
 
             // Execute command
@@ -215,4 +213,86 @@ void execute(char **tokens, int num_tokens)
 
         waitpid(pid, NULL, 0);
     }
+}
+void UpdateHistorial(char *name, char *command)
+{
+    FILE *output = fopen(name, "a");
+
+    if (output == NULL)
+    {
+        perror("No se pudo abrir el archivo de texto");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(output, "%s\n", command);
+    fclose(output);
+}
+
+int LenHistorial(char *name)
+{
+    char line[1000];
+    int contador = 0;
+    FILE *fp = fopen(name, "r");
+
+    while (fgets(line, sizeof(line), fp))
+        contador++;
+
+    fclose(fp);
+    return contador;
+}
+
+char *PrintHistorialorAgain(int falg, int again)
+{
+    char history[] = "history.hst";
+    FILE *fp = fopen(history, "r");
+    int len_historial = LenHistorial(history);
+    char line[1024];
+    int n = len_historial - 10;
+    if (again > len_historial)
+        again = 10;
+
+    if (len_historial <= 10)
+    {
+        int i = 1;
+        while (fgets(line, sizeof(line), fp))
+        {
+            if (falg && i == again)
+            {
+                char *aginline = malloc(sizeof(char) * 1024);
+                strcpy(aginline, line);
+                return aginline;
+            }
+            if(!falg) printf("%i %s", i, line);
+            i++;
+        }
+
+        return NULL;
+    }
+
+    fseek(fp, 0, SEEK_SET);
+
+    for (int i = 0; i < n; i++)
+    {
+        if (fgets(line, sizeof(line), fp) == NULL)
+        {
+            printf("La línea deseada no existe.n");
+            return NULL;
+        }
+    }
+    int i = 1;
+    while (fgets(line, sizeof(line), fp))
+    {
+        if (falg && i == again)
+        {
+            char *aginline = malloc(sizeof(char) * 1024);
+            strcpy(aginline, line);
+            return aginline;
+        }
+        if(!falg) printf("%i %s", i, line);
+
+        i++;
+    }
+
+    fclose(fp);
+    return NULL;
 }

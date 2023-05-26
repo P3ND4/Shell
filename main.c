@@ -16,6 +16,7 @@ int main()
     int num_tokens;
     FILE *file;
     char file_content[1024];
+    char histimput[1024];
 
     while (1)
     {
@@ -29,6 +30,7 @@ int main()
 
         // Remove newline character
         input[strcspn(input, "\n")] = '\0';
+        strcpy(histimput,input);
 
         // Ignore comments
         char *comment = strchr(input, '#');
@@ -46,6 +48,44 @@ int main()
             token = strtok(NULL, " ");
         }
         tokens[num_tokens] = NULL;
+
+        if (strcmp(tokens[0], "again") == 0)
+        {
+            int again = 10;
+            if(num_tokens > 1) again = (int) strtol(tokens[1], NULL, 10);
+            char *newIn = malloc(sizeof(char)*1024); 
+            char* temp = PrintHistorialorAgain(1 , again);
+            strcpy(newIn,temp);
+            newIn[strcspn(newIn, "\n")] = '\0';
+
+            strcpy(histimput,newIn);
+            histimput[strlen(newIn)] = '\0';
+
+            // Ignore comments
+            char *comment2 = strchr(input, '#');
+            if (comment2 != NULL)
+            {
+                *comment2 = '\0';
+            }
+
+            // Parse tokens
+            num_tokens = 0;
+            char *toke2 = strtok(newIn, " ");
+            while (toke2 != NULL)
+            {
+                tokens[num_tokens++] = toke2;
+                toke2 = strtok(NULL, " ");
+            }
+            tokens[num_tokens] = NULL;
+        }
+
+        UpdateHistorial("history.hst", histimput);
+
+        if (strcmp(tokens[0], "history") == 0)
+        {
+            PrintHistorialorAgain(0, 0);
+            continue;
+        }
 
         // Handle built-in commands
         if (strcmp(tokens[0], "cd") == 0)
