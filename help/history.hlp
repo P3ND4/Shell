@@ -1,0 +1,2 @@
+guarda en un archivo los comandos insertados y al invocar este comando
+lee dicho archivo e imprime los comandos en pantalla

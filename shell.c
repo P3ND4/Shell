@@ -296,3 +296,34 @@ char *PrintHistorialorAgain(int falg, int again)
     fclose(fp);
     return NULL;
 }
+void exeHelp(char* func)
+{
+    char help[] = "/help";
+    char slash[] = "/";
+    char * newfunc = malloc(sizeof(char)*strlen(func));
+    strcpy(newfunc,func);
+    char path[1000];
+    getcwd(path, 1000);
+    char *hlpath = malloc(sizeof(char)*(strlen(path)+strlen(help)+1+strlen(newfunc)));
+    hlpath = strcat(hlpath, path);
+    
+    hlpath = strcat(hlpath, help);
+    
+    hlpath = strcat(hlpath, slash);
+    
+    hlpath = strcat(hlpath, newfunc);
+    
+    hlpath = strcat(hlpath, ".hlp");
+    int file = open(hlpath,O_RDONLY | O_CREAT,0600);
+    if(file == -1){
+        printf("La funcionalidad %s no esta implementada en esta shell \n", func);
+        return;
+    } 
+    char text[2000];
+    read(file, text, 2000);
+    close(file);
+    printf("\n");
+    printf("%s\n",text);
+    printf("\n");
+
+}

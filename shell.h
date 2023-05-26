@@ -4,3 +4,4 @@ void prompt();
 void UpdateHistorial(char *name, char *command);
 int LenHistorial(char *name);
 char *PrintHistorialorAgain(int falg, int again);
+void exeHelp(char* func);

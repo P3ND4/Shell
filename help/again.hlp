@@ -1,0 +1,8 @@
+comando que repite la ultima ejecucion
+
+por defecto guarda el ultimo comando almacenado en history
+en cada entrada se alamcena la linea insertada por el usuario
+si el usuario inserta again entonces se inicia la ejecucion cambiando el comando 
+por la ultima linea ejecutada, en caso de que quiera ejecutar alguno 
+de los 10 anteriores debe escribir again #, donde # seria el orden que tenia el
+comando en los ultimos 10 escritos

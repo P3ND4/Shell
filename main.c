@@ -87,6 +87,13 @@ int main()
             continue;
         }
 
+        if(strcmp(tokens[0], "help") == 0)
+        {
+            if(num_tokens > 1) exeHelp(tokens[1]);
+            else exeHelp("help");
+            continue;
+        }
+
         // Handle built-in commands
         if (strcmp(tokens[0], "cd") == 0)
         {

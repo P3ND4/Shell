@@ -1,0 +1,10 @@
+la shell puede ejecutar cualquier comando de linux : ls echo grep etc
+
+se puede redireccionar la salida y entrada estandar con < >> >
+
+se puede cambiar de directorio con cd
+
+al introducir el caracter # el resto de la linea deja de ser parseada
+ejemplo : comando1 arg #ya esto no se ejecuta 
+
+el prompt siempre se imprime antes y despues de la ejecucion de un comando 

@@ -1,0 +1,16 @@
+Integrantes: Jose Carlos Pendas Rodriguez y Max Bengochea More
+
+
+Funcionalidades:
+
+basicas: Funcionalidad Basica
+multiespacio: mas de un espacio
+help : mostrar esta ayuda 
+history : historial de comandos 
+again : repetir ultimo comando 
+
+
+Para saber mas de alguna funcionalidad pruebe help 'funcionalidad' eligiendo
+la funcionalidad deseada
+
+Si desea salir de la shell puede ejecutar el comando exit
