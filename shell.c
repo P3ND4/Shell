@@ -249,7 +249,7 @@ char *PrintHistorialorAgain(int falg, int again)
     char line[1024];
     int n = len_historial - 10;
     if (again > len_historial)
-        again = 10;
+        again = len_historial;
 
     if (len_historial <= 10)
     {
