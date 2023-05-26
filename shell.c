@@ -314,9 +314,10 @@ void exeHelp(char* func)
     hlpath = strcat(hlpath, newfunc);
     
     hlpath = strcat(hlpath, ".hlp");
-    int file = open(hlpath,O_RDONLY | O_CREAT,0600);
-    if(file == -1){
-        printf("La funcionalidad %s no esta implementada en esta shell \n", func);
+    int file = open(hlpath,O_RDONLY ,0600);
+    if(file == -1)
+    {
+        printf("\n La funcionalidad %s no esta implementada en esta shell \n \n", func);
         return;
     } 
     char text[2000];
